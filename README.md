@@ -1,8 +1,13 @@
 # OpenDTU
 
-[![OpenDTU Build](https://github.com/tbnobody/OpenDTU/actions/workflows/build.yml/badge.svg)](https://github.com/tbnobody/OpenDTU/actions/workflows/build.yml)
-[![cpplint](https://github.com/tbnobody/OpenDTU/actions/workflows/cpplint.yml/badge.svg)](https://github.com/tbnobody/OpenDTU/actions/workflows/cpplint.yml)
-[![Yarn Linting](https://github.com/tbnobody/OpenDTU/actions/workflows/yarnlint.yml/badge.svg)](https://github.com/tbnobody/OpenDTU/actions/workflows/yarnlint.yml)
+[![OpenDTU Build](https://github.com/jstammi/OpenDTU/actions/workflows/build.yml/badge.svg)](https://github.com/jstammi/OpenDTU/actions/workflows/build.yml)
+[![cpplint](https://github.com/jstammi/OpenDTU/actions/workflows/cpplint.yml/badge.svg)](https://github.com/jstammi/OpenDTU/actions/workflows/cpplint.yml)
+[![Yarn Linting](https://github.com/jstammi/OpenDTU/actions/workflows/yarnlint.yml/badge.svg)](https://github.com/jstammi/OpenDTU/actions/workflows/yarnlint.yml)
+
+## THIS IS A FORK
+
+This was forked from https://github.com/tbnobody/OpenDTU due to changes that were not accepted upstream:
+* allow mqtt publish every seconds (https://github.com/tbnobody/OpenDTU/pull/756)
 
 ## !! IMPORTANT UPGRADE NOTES !!
 
@@ -184,7 +189,7 @@ It is recommended to make all changes only in the  'platformio_override.ini', th
 * Install [Visual Studio Code](https://code.visualstudio.com/download) (from now named "vscode")
 * In Visual Studio Code, install the [PlatformIO Extension](https://marketplace.visualstudio.com/items?itemName=platformio.platformio-ide)
 * Install git and enable git in vscode - [git download](https://git-scm.com/downloads/) - [Instructions](https://www.jcchouinard.com/install-git-in-vscode/)
-* Clone this repository (you really have to clone it, don't just download the ZIP file. During the build process the git hash gets embedded into the firmware. If you download the ZIP file a build error will occur): Inside vscode open the command palette by pressing `CTRL` + `SHIFT` + `P`. Enter `git clone`, add the repository-URL `https://github.com/tbnobody/OpenDTU`. Next you have to choose (or create) a target directory.
+* Clone this repository (you really have to clone it, don't just download the ZIP file. During the build process the git hash gets embedded into the firmware. If you download the ZIP file a build error will occur): Inside vscode open the command palette by pressing `CTRL` + `SHIFT` + `P`. Enter `git clone`, add the repository-URL `https://github.com/jstammi/OpenDTU`. Next you have to choose (or create) a target directory.
 * In vscode, choose File --> Open Folder and select the previously downloaded source code. (You have to select the folder which contains the "platformio.ini" and "platformio_override.ini" file)
 * Adjust the COM port in the file "platformio_override.ini" for your USB-to-serial-converter. It occurs twice:
   * upload_port
@@ -210,7 +215,7 @@ It is recommended to make all changes only in the  'platformio_override.ini', th
 
 ### using the pre-compiled .bin files
 
-The pre-compiled files can be found on the [github page](https://github.com/tbnobody/OpenDTU) in the tab "Actions" and the sub menu "OpenDTU Build". Just choose the latest build from the master branch (search for "master" in the blue font text but click on the white header text!). You need to be logged in with your github account to download the files.
+The pre-compiled files can be found on the [github page](https://github.com/jstammi/OpenDTU) in the tab "Actions" and the sub menu "OpenDTU Build". Just choose the latest build from the master branch (search for "master" in the blue font text but click on the white header text!). You need to be logged in with your github account to download the files.
 Use a ESP32 flash tool of your choice (see next chapter) and flash the `.bin` files to the right addresses:
 
 | Address  | File                   |
@@ -332,6 +337,7 @@ A documentation of the Web API can be found here: [Web-API Documentation](docs/W
 
 ## Related Projects
 
+* [Upstream OpenDTU](https://github.com/tbnobody/OpenDTU)
 * [Ahoy](https://github.com/grindylow/ahoy)
 * [DTU Simulator](https://github.com/Ziyatoe/DTUsimMI1x00-Hoymiles)
 * [OpenDTU extended to talk to Victrons MPPT battery chargers (Ve.Direct)](https://github.com/helgeerbe/OpenDTU_VeDirect)

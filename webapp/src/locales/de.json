@@ -159,6 +159,7 @@
         "SdkVersion": "SDK-Version",
         "ConfigVersion": "Konfigurationsversion",
         "FirmwareVersion": "Firmwareversion / git Hash",
+        "PioEnv": "PIO Umgebung",
         "FirmwareVersionHint": "Klicken Sie hier, um Informationen über Ihre aktuelle Version anzuzeigen",
         "FirmwareUpdate": "Firmware-Aktualisierung",
         "FirmwareUpdateHint": "Klicken Sie hier, um die Änderungen zwischen Ihrer Version und der neuesten Version anzuzeigen",
@@ -529,6 +530,10 @@
         "Rotation": "Rotation:",
         "rot0": "Keine Rotation",
         "rot90": "90 Grad Drehung",
+        "DisplayLanguage": "Displaysprache:",
+        "en": "Englisch",
+        "de": "Deutsch",
+        "fr": "Französisch",
         "rot180": "180 Grad Drehung",
         "rot270": "270 Grad Drehung",
         "Save": "@:dtuadmin.Save"

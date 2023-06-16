@@ -166,6 +166,11 @@ void InverterAbstract::addRxFragment(uint8_t fragment[], uint8_t len)
         return;
     }
 
+    if (!verifyRxFragment(fragmentCount, fragmentId, fragment, len)) {
+        Hoymiles.getMessageOutput()->printf("ERROR: fragment with count %d and of length %d rejected by %s\r\n", fragmentCount, len, typeName());
+        return;
+    }
+
     memcpy(_rxFragmentBuffer[fragmentId - 1].fragment, &fragment[10], len - 11);
     _rxFragmentBuffer[fragmentId - 1].len = len - 11;
     _rxFragmentBuffer[fragmentId - 1].mainCmd = fragment[0];
@@ -179,6 +184,11 @@ void InverterAbstract::addRxFragment(uint8_t fragment[], uint8_t len)
     if ((fragmentCount & 0b10000000) == 0b10000000) {
         _rxFragmentMaxPacketId = fragmentId;
     }
+}
+
+boolean InverterAbstract::verifyRxFragment(uint8_t fragmentCount, uint8_t fragmentId, uint8_t fragment[], uint8_t len)
+{
+    return true;
 }
 
 // Returns Zero on Success or the Fragment ID for retransmit or error code

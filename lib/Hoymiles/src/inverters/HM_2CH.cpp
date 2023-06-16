@@ -59,6 +59,26 @@ bool HM_2CH::isValidSerial(uint64_t serial)
     return false;
 }
 
+boolean HM_2CH::verifyRxFragment(uint8_t fragmentCount, uint8_t fragmentId, uint8_t fragment[], uint8_t len)
+{
+    if (fragmentId < 0 || fragmentId > 3) {
+        return false;
+    }
+
+    if (fragmentId == 3) {
+        // 3 packets expected, for last one the leading bit must be set
+        if ((fragmentCount & 0b10000000) != 0b10000000 || len != 23) {
+            return false;
+        }
+    } else {
+        if ((fragmentCount & 0b10000000) == 0b10000000 || len != 27) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 String HM_2CH::typeName()
 {
     return "HM-600, HM-700, HM-800";

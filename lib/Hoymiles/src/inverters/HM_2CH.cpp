@@ -3,6 +3,7 @@
 /*
  * Copyright (C) 2022 Thomas Basler and others
  */
+#include "Hoymiles.h"
 #include "HM_2CH.h"
 
 static const byteAssign_t byteAssignment[] = {
@@ -59,24 +60,44 @@ bool HM_2CH::isValidSerial(uint64_t serial)
     return false;
 }
 
-boolean HM_2CH::verifyRxFragment(uint8_t fragmentCount, uint8_t fragmentId, uint8_t fragment[], uint8_t len)
+uint8_t HM_2CH::verifyStatisticsFragments(fragment_t fragment[], uint8_t max_fragment_id)
 {
-    if (fragmentId < 0 || fragmentId > 3) {
-        return false;
+    if (max_fragment_id != 3) {
+        Hoymiles.getMessageOutput()->printf("ERROR: statistics fragments with max id %d rejected by %s\r\n", 
+                                            max_fragment_id, typeName().c_str());
+        return FRAGMENT_INVALID_ID;
     }
 
-    if (fragmentId == 3) {
-        // 3 packets expected, for last one the leading bit must be set
-        if ((fragmentCount & 0b10000000) != 0b10000000 || len != 23) {
-            return false;
-        }
-    } else {
-        if ((fragmentCount & 0b10000000) == 0b10000000 || len != 27) {
-            return false;
-        }
+    uint8_t verify_result = verifyStatisticsFragment(fragment[0], 1, 16);
+    if (verify_result != FRAGMENT_OK) {
+        return verify_result;
     }
 
-    return true;
+    verify_result = verifyStatisticsFragment(fragment[1], 2, 16);
+    if (verify_result != FRAGMENT_OK) {
+        return verify_result;
+    }
+
+    verify_result = verifyStatisticsFragment(fragment[2], 3, 12);
+    if (verify_result != FRAGMENT_OK) {
+        return verify_result;
+    }
+    return FRAGMENT_OK;
+}
+
+uint8_t HM_2CH::verifyStatisticsFragment(fragment_t fragment, uint8_t fragment_id, uint8_t expected_len)
+{
+    if (!fragment.wasReceived) {
+        Hoymiles.getMessageOutput()->printf("ERROR: statistics fragment %d missing for %s\r\n",
+                                            fragment_id, typeName().c_str());
+        return FRAGMENT_MISSING;
+    }
+    if (fragment.len != expected_len) {
+        Hoymiles.getMessageOutput()->printf("ERROR: statistics fragment %d len error for %s: %d vs %d\r\n",
+                                            fragment_id, typeName().c_str(), fragment.len, expected_len);
+        return FRAGMENT_INVALID_LENGTH;
+    }
+    return FRAGMENT_OK;
 }
 
 String HM_2CH::typeName()

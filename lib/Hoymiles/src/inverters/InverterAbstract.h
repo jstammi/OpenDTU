@@ -74,7 +74,6 @@ public:
 
 protected:
     HoymilesRadio* _radio;
-    boolean verifyRxFragment(uint8_t fragmentCount, uint8_t fragmentId, uint8_t fragment[], uint8_t len);
 
 private:
     serial_u _serial;

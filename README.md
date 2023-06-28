@@ -217,13 +217,6 @@ It is recommended to make all changes only in the  'platformio_override.ini', th
 
 The pre-compiled binary files can be found here on the [github page behind "Releases"](https://github.com/jstammi/OpenDTU/releases) (look at the right column). For a first installation on an ESP32, download `opendtu-generic.factory.bin` and use a ESP32 flash tool of your choice to flash the `.bin` file to the address `0x0`. (The previous method with different .bin files is no more necessary.)
 
-| Address  | File                   |
-| ---------| ---------------------- |
-| 0x1000   | bootloader.bin         |
-| 0x8000   | partitions.bin         |
-| 0xe000   | boot_app0.bin          |
-| 0x10000  | opendtu-*.bin          |
-
 For further updates download `opendtu-generic.bin` and use the over-the-air firmware update in OpenDTU's web interface.
 
 #### Flash with esptool.py (Linux)

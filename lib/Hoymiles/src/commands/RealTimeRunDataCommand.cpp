@@ -24,11 +24,6 @@ bool RealTimeRunDataCommand::handleResponse(InverterAbstract* inverter, fragment
     if (!MultiDataCommand::handleResponse(inverter, fragment, max_fragment_id)) {
         return false;
     }
-        
-    uint8_t verifyResult = inverter->verifyStatisticsFragments(fragment, max_fragment_id);
-    if (verifyResult != FRAGMENT_OK && verifyResult != FRAGMENT_NO_INV_CHECK) {
-        return false;
-    }
 
     // Move all fragments into target buffer
     uint8_t offs = 0;

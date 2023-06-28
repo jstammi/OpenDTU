@@ -20,10 +20,6 @@ enum {
     FRAGMENT_ALL_MISSING_TIMEOUT = 254,
     FRAGMENT_RETRANSMIT_TIMEOUT = 253,
     FRAGMENT_HANDLE_ERROR = 252,
-    FRAGMENT_INVALID_ID = 127,
-    FRAGMENT_MISSING = 126,
-    FRAGMENT_INVALID_LENGTH = 125,
-    FRAGMENT_NO_INV_CHECK = 64,
     FRAGMENT_OK = 0
 };
 
@@ -67,8 +63,6 @@ public:
     virtual bool sendRestartControlRequest() = 0;
     virtual bool resendPowerControlRequest() = 0;
     virtual bool sendChangeChannelRequest();
-
-    virtual uint8_t verifyStatisticsFragments(fragment_t fragment[], uint8_t max_fragment_id);
 
     HoymilesRadio* getRadio();
 

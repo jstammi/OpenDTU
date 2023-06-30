@@ -181,12 +181,6 @@ void InverterAbstract::addRxFragment(uint8_t fragment[], uint8_t len)
     }
 }
 
-uint8_t InverterAbstract::verifyStatisticsFragments(fragment_t fragment[], uint8_t max_fragment_id)
-{
-    Hoymiles.getMessageOutput()->printf("WARN: no statistics fragments validation for %s\r\n", typeName().c_str());
-    return FRAGMENT_NO_INV_CHECK;
-}
-
 // Returns Zero on Success or the Fragment ID for retransmit or error code
 uint8_t InverterAbstract::verifyAllFragments(CommandAbstract* cmd)
 {

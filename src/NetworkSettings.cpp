@@ -124,8 +124,6 @@ void NetworkSettingsClass::raiseEvent(network_event event)
 void NetworkSettingsClass::setupMode()
 {
     if (adminEnabled) {
-        WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
-        WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
         WiFi.mode(WIFI_AP_STA);
         String ssidString = getApName();
         WiFi.softAPConfig(apIp, apIp, apNetmask);
@@ -220,8 +218,6 @@ void NetworkSettingsClass::loop()
             }
             if (connectRedoTimer > WIFI_RECONNECT_REDO_TIMEOUT && forceDisconnection) {
                 MessageOutput.print("Enable search for AP... ");
-                WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
-                WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
                 WiFi.mode(WIFI_AP_STA);
                 MessageOutput.println("done");
                 applyConfig();

@@ -17,7 +17,7 @@ void NtpSettingsClass::init()
 {
     struct tm now;
     getLocalTime(&now);
-    MessageOutput.printf("RTC before NTP init: %s\r\n", asctime(&now));
+    MessageOutput.printf("NTP: RTC before init: %s\r\n", asctime(&now));
 
     using std::placeholders::_1;
     sntp_set_time_sync_notification_cb(&onTimeSync);
@@ -40,7 +40,7 @@ void NtpSettingsClass::setTimezone()
 
 void NtpSettingsClass::onTimeSync(timeval *tv)
 {
-  MessageOutput.printf("NTP time sync (%d): %s\r\n", sntp_get_sync_mode(), ctime(&tv->tv_sec));
+  MessageOutput.printf("NTP: time sync (%d): %s\r\n", sntp_get_sync_mode(), ctime(&tv->tv_sec));
   if (sntp_get_sync_mode() == SNTP_SYNC_MODE_IMMED) {
     sntp_set_sync_mode(SNTP_SYNC_MODE_SMOOTH);
   }

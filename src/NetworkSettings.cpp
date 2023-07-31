@@ -5,6 +5,7 @@
 #include "NetworkSettings.h"
 #include "Configuration.h"
 #include "MessageOutput.h"
+#include "NtpSettings.h"
 #include "PinMapping.h"
 #include "Utils.h"
 #include "defaults.h"
@@ -51,6 +52,7 @@ void NetworkSettingsClass::NetworkEvent(WiFiEvent_t event)
     case ARDUINO_EVENT_ETH_GOT_IP:
         MessageOutput.printf("ETH got IP: %s\r\n", ETH.localIP().toString().c_str());
         if (_networkMode == network_mode::Ethernet) {
+            initNtp();
             raiseEvent(network_event::NETWORK_GOT_IP);
         }
         break;
@@ -78,12 +80,21 @@ void NetworkSettingsClass::NetworkEvent(WiFiEvent_t event)
     case ARDUINO_EVENT_WIFI_STA_GOT_IP:
         MessageOutput.printf("WiFi got ip: %s\r\n", WiFi.localIP().toString().c_str());
         if (_networkMode == network_mode::WiFi) {
+            initNtp();
             raiseEvent(network_event::NETWORK_GOT_IP);
         }
         break;
     default:
         break;
     }
+}
+
+void NetworkSettingsClass::initNtp()
+{
+    // Initialize NTP
+    MessageOutput.print("Initialize NTP... ");
+    NtpSettings.init();
+    MessageOutput.println("done");
 }
 
 bool NetworkSettingsClass::onEvent(NetworkEventCb cbEvent, network_event event)

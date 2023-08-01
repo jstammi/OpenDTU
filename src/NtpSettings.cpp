@@ -21,7 +21,8 @@ void NtpSettingsClass::init()
 
     using std::placeholders::_1;
     sntp_set_time_sync_notification_cb(&onTimeSync);
-    sntp_set_sync_interval(1800000); // every 30 minutes, default: 1h
+    sntp_set_sync_interval(60 * 60 * 1000); // every 1h (should be default also)
+    sntp_set_sync_mode(SNTP_SYNC_MODE_IMMED);
     setServer();
     setTimezone();
 }
@@ -39,7 +40,10 @@ void NtpSettingsClass::setTimezone()
 
 void NtpSettingsClass::onTimeSync(timeval *tv)
 {
-  MessageOutput.printf("NTP time sync: %s\r\n", ctime(&tv->tv_sec));
+  MessageOutput.printf("NTP time sync (%d): %s\r\n", sntp_get_sync_mode(), ctime(&tv->tv_sec));
+  if (sntp_get_sync_mode() == SNTP_SYNC_MODE_IMMED) {
+    sntp_set_sync_mode(SNTP_SYNC_MODE_SMOOTH);
+  }
 }
 
 NtpSettingsClass NtpSettings;

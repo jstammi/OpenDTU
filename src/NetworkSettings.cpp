@@ -24,6 +24,8 @@ void NetworkSettingsClass::init()
     WiFi.setScanMethod(WIFI_ALL_CHANNEL_SCAN);
     WiFi.setSortMethod(WIFI_CONNECT_AP_BY_SIGNAL);
 
+    WiFi.disconnect(true, true);
+
     WiFi.onEvent(std::bind(&NetworkSettingsClass::NetworkEvent, this, _1));
     setupMode();
 }
@@ -71,6 +73,7 @@ void NetworkSettingsClass::NetworkEvent(WiFiEvent_t event)
         MessageOutput.println("WiFi disconnected");
         if (_networkMode == network_mode::WiFi) {
             MessageOutput.println("Try reconnecting");
+            WiFi.disconnect(true, true);
             WiFi.reconnect();
             raiseEvent(network_event::NETWORK_DISCONNECTED);
         }

@@ -8,6 +8,7 @@
 
 This was forked from https://github.com/tbnobody/OpenDTU due to changes that were not accepted upstream:
 * allow mqtt publish every seconds (https://github.com/tbnobody/OpenDTU/pull/756)
+* smoothly sync time after having set once hard on ntp init following the network becoming available (again)
 
 ## !! IMPORTANT UPGRADE NOTES !!
 

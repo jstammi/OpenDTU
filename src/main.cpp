@@ -14,7 +14,6 @@
 #include "MqttHandleInverterTotal.h"
 #include "MqttSettings.h"
 #include "NetworkSettings.h"
-#include "NtpSettings.h"
 #include "PinMapping.h"
 #include "SunPosition.h"
 #include "Utils.h"
@@ -83,11 +82,6 @@ void setup()
     NetworkSettings.init();
     MessageOutput.println("done");
     NetworkSettings.applyConfig();
-
-    // Initialize NTP
-    MessageOutput.print("Initialize NTP... ");
-    NtpSettings.init();
-    MessageOutput.println("done");
 
     // Initialize SunPosition
     MessageOutput.print("Initialize SunPosition... ");

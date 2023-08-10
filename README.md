@@ -8,6 +8,7 @@
 
 This was forked from https://github.com/tbnobody/OpenDTU due to changes that were not accepted upstream:
 * allow mqtt publish every seconds (https://github.com/tbnobody/OpenDTU/pull/756)
+* try fixing failing wlan re-connect due to invalid association packets exchange with ap
 
 ## !! IMPORTANT UPGRADE NOTES !!
 

@@ -60,6 +60,7 @@ private:
     void setHostname();
     void setStaticIp();
     void setupMode();
+    void initNtp();
     void NetworkEvent(WiFiEvent_t event);
     bool adminEnabled = true;
     bool forceDisconnection = false;

@@ -8,6 +8,7 @@ enum WebApiError {
     GenericDataTooLarge,
     GenericParseError,
     GenericValueMissing,
+    GenericWriteFailed,
 
     DtuBase = 2000,
     DtuSerialZero,
@@ -56,6 +57,7 @@ enum WebApiError {
     MqttPublishInterval,
     MqttHassTopicLength,
     MqttHassTopicCharacter,
+    MqttLwtQos,
 
     NetworkBase = 8000,
     NetworkIpInvalid,

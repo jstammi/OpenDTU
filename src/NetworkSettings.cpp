@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
- * Copyright (C) 2022-2023 Thomas Basler and others
+ * Copyright (C) 2022-2024 Thomas Basler and others
  */
 #include "NetworkSettings.h"
 #include "Configuration.h"
@@ -11,9 +11,11 @@
 #include "defaults.h"
 #include <ESPmDNS.h>
 #include <ETH.h>
+#include "__compiled_constants.h"
 
 NetworkSettingsClass::NetworkSettingsClass()
-    : _apIp(192, 168, 4, 1)
+    : _loopTask(TASK_IMMEDIATE, TASK_FOREVER, std::bind(&NetworkSettingsClass::loop, this))
+    , _apIp(192, 168, 4, 1)
     , _apNetmask(255, 255, 255, 0)
 {
     _dnsServer.reset(new DNSServer());
@@ -32,8 +34,6 @@ void NetworkSettingsClass::init(Scheduler& scheduler)
     setupMode();
 
     scheduler.addTask(_loopTask);
-    _loopTask.setCallback(std::bind(&NetworkSettingsClass::loop, this));
-    _loopTask.setIterations(TASK_FOREVER);
     _loopTask.enable();
 }
 
@@ -151,7 +151,7 @@ void NetworkSettingsClass::handleMDNS()
 
         MDNS.addService("http", "tcp", 80);
         MDNS.addService("opendtu", "tcp", 80);
-        MDNS.addServiceTxt("opendtu", "tcp", "git_hash", AUTO_GIT_HASH);
+        MDNS.addServiceTxt("opendtu", "tcp", "git_hash", __COMPILED_GIT_HASH__);
 
         MessageOutput.println("done");
     } else {

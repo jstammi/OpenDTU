@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
- * Copyright (C) 2022-2023 Thomas Basler and others
+ * Copyright (C) 2022-2024 Thomas Basler and others
  */
 #include "MqttHandleHass.h"
 #include "MqttHandleInverter.h"
@@ -8,14 +8,18 @@
 #include "NetworkSettings.h"
 #include "Utils.h"
 #include "defaults.h"
+#include "__compiled_constants.h"
 
 MqttHandleHassClass MqttHandleHass;
+
+MqttHandleHassClass::MqttHandleHassClass()
+    : _loopTask(TASK_IMMEDIATE, TASK_FOREVER, std::bind(&MqttHandleHassClass::loop, this))
+{
+}
 
 void MqttHandleHassClass::init(Scheduler& scheduler)
 {
     scheduler.addTask(_loopTask);
-    _loopTask.setCallback(std::bind(&MqttHandleHassClass::loop, this));
-    _loopTask.setIterations(TASK_FOREVER);
     _loopTask.enable();
 }
 
@@ -53,7 +57,7 @@ void MqttHandleHassClass::publishConfig()
 
     const CONFIG_T& config = Configuration.get();
 
-     // publish DTU sensors
+    // publish DTU sensors
     publishDtuSensor("IP", "", "diagnostic", "mdi:network-outline", "", "");
     publishDtuSensor("WiFi Signal", "signal_strength", "diagnostic", "", "dBm", "rssi");
     publishDtuSensor("Uptime", "duration", "diagnostic", "", "s", "");
@@ -104,7 +108,7 @@ void MqttHandleHassClass::publishInverterField(std::shared_ptr<InverterAbstract>
     const String serial = inv->serialString();
 
     String fieldName;
-    if (type == TYPE_AC && fieldType.fieldId == FLD_PDC) {
+    if (type == TYPE_INV && fieldType.fieldId == FLD_PDC) {
         fieldName = "PowerDC";
     } else {
         fieldName = inv->Statistics()->getChannelFieldName(type, channel, fieldType.fieldId);
@@ -134,10 +138,7 @@ void MqttHandleHassClass::publishInverterField(std::shared_ptr<InverterAbstract>
             name = "CH" + chanNum + " " + fieldName;
         }
 
-        DynamicJsonDocument root(1024);
-        if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-            return;
-        }
+        JsonDocument root;
 
         root["name"] = name;
         root["stat_t"] = stateTopic;
@@ -158,6 +159,10 @@ void MqttHandleHassClass::publishInverterField(std::shared_ptr<InverterAbstract>
         }
         if (stateCls != 0) {
             root["stat_cla"] = stateCls;
+        }
+
+        if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+            return;
         }
 
         String buffer;
@@ -182,10 +187,7 @@ void MqttHandleHassClass::publishInverterButton(std::shared_ptr<InverterAbstract
 
     const String cmdTopic = MqttSettings.getPrefix() + serial + "/" + subTopic;
 
-    DynamicJsonDocument root(1024);
-    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-        return;
-    }
+    JsonDocument root;
 
     root["name"] = caption;
     root["uniq_id"] = serial + "_" + buttonId;
@@ -200,6 +202,10 @@ void MqttHandleHassClass::publishInverterButton(std::shared_ptr<InverterAbstract
     root["payload_press"] = payload;
 
     createInverterInfo(root, inv);
+
+    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+        return;
+    }
 
     String buffer;
     serializeJson(root, buffer);
@@ -224,10 +230,7 @@ void MqttHandleHassClass::publishInverterNumber(
     const String cmdTopic = MqttSettings.getPrefix() + serial + "/" + commandTopic;
     const String statTopic = MqttSettings.getPrefix() + serial + "/" + stateTopic;
 
-    DynamicJsonDocument root(1024);
-    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-        return;
-    }
+    JsonDocument root;
 
     root["name"] = caption;
     root["uniq_id"] = serial + "_" + buttonId;
@@ -242,6 +245,10 @@ void MqttHandleHassClass::publishInverterNumber(
     root["max"] = max;
 
     createInverterInfo(root, inv);
+
+    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+        return;
+    }
 
     String buffer;
     serializeJson(root, buffer);
@@ -262,10 +269,7 @@ void MqttHandleHassClass::publishInverterBinarySensor(std::shared_ptr<InverterAb
 
     const String statTopic = MqttSettings.getPrefix() + serial + "/" + subTopic;
 
-    DynamicJsonDocument root(1024);
-    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-        return;
-    }
+    JsonDocument root;
 
     root["name"] = caption;
     root["uniq_id"] = serial + "_" + sensorId;
@@ -274,6 +278,10 @@ void MqttHandleHassClass::publishInverterBinarySensor(std::shared_ptr<InverterAb
     root["pl_off"] = payload_off;
 
     createInverterInfo(root, inv);
+
+    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+        return;
+    }
 
     String buffer;
     serializeJson(root, buffer);
@@ -290,10 +298,7 @@ void MqttHandleHassClass::publishDtuSensor(const char* name, const char* device_
         topic = id;
     }
 
-    DynamicJsonDocument root(1024);
-    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-        return;
-    }
+    JsonDocument root;
 
     root["name"] = name;
     root["uniq_id"] = getDtuUniqueId() + "_" + id;
@@ -319,6 +324,10 @@ void MqttHandleHassClass::publishDtuSensor(const char* name, const char* device_
 
     createDtuInfo(root);
 
+    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+        return;
+    }
+
     String buffer;
     const String configTopic = "sensor/" + getDtuUniqueId() + "/" + id + "/config";
     serializeJson(root, buffer);
@@ -336,10 +345,7 @@ void MqttHandleHassClass::publishDtuBinarySensor(const char* name, const char* d
         topic = String("dtu/") + "/" + id;
     }
 
-    DynamicJsonDocument root(1024);
-    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
-        return;
-    }
+    JsonDocument root;
 
     root["name"] = name;
     root["uniq_id"] = getDtuUniqueId() + "_" + id;
@@ -356,13 +362,17 @@ void MqttHandleHassClass::publishDtuBinarySensor(const char* name, const char* d
 
     createDtuInfo(root);
 
+    if (!Utils::checkJsonAlloc(root, __FUNCTION__, __LINE__)) {
+        return;
+    }
+
     String buffer;
     const String configTopic = "binary_sensor/" + getDtuUniqueId() + "/" + id + "/config";
     serializeJson(root, buffer);
     publish(configTopic, buffer);
 }
 
-void MqttHandleHassClass::createInverterInfo(DynamicJsonDocument& root, std::shared_ptr<InverterAbstract> inv)
+void MqttHandleHassClass::createInverterInfo(JsonDocument& root, std::shared_ptr<InverterAbstract> inv)
 {
     createDeviceInfo(
         root,
@@ -371,11 +381,11 @@ void MqttHandleHassClass::createInverterInfo(DynamicJsonDocument& root, std::sha
         getDtuUrl(),
         "OpenDTU",
         inv->typeName(),
-        AUTO_GIT_HASH,
+        __COMPILED_GIT_HASH__,
         getDtuUniqueId());
 }
 
-void MqttHandleHassClass::createDtuInfo(DynamicJsonDocument& root)
+void MqttHandleHassClass::createDtuInfo(JsonDocument& root)
 {
     createDeviceInfo(
         root,
@@ -384,16 +394,16 @@ void MqttHandleHassClass::createDtuInfo(DynamicJsonDocument& root)
         getDtuUrl(),
         "OpenDTU",
         "OpenDTU",
-        AUTO_GIT_HASH);
+        __COMPILED_GIT_HASH__);
 }
 
 void MqttHandleHassClass::createDeviceInfo(
-    DynamicJsonDocument& root,
+    JsonDocument& root,
     const String& name, const String& identifiers, const String& configuration_url,
     const String& manufacturer, const String& model, const String& sw_version,
     const String& via_device)
 {
-    auto object = root.createNestedObject("dev");
+    auto object = root["dev"].to<JsonObject>();
 
     object["name"] = name;
     object["ids"] = identifiers;
@@ -421,5 +431,5 @@ void MqttHandleHassClass::publish(const String& subtopic, const String& payload)
 {
     String topic = Configuration.get().Mqtt.Hass.Topic;
     topic += subtopic;
-    MqttSettings.publishGeneric(topic.c_str(), payload.c_str(), Configuration.get().Mqtt.Hass.Retain);
+    MqttSettings.publishGeneric(topic, payload, Configuration.get().Mqtt.Hass.Retain);
 }

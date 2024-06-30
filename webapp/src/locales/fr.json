@@ -26,7 +26,14 @@
         "Loading": "Chargement...",
         "Reload": "Reload",
         "Cancel": "Annuler",
-        "Save": "Sauvegarder"
+        "Save": "Sauvegarder",
+        "Refreshing": "Refreshing",
+        "Pull": "Pull down to refresh",
+        "Release": "Release to refresh",
+        "Close": "Fermer"
+    },
+    "Error": {
+        "Oops": "Oops!"
     },
     "localeswitcher": {
         "Dark": "Sombre",
@@ -44,6 +51,7 @@
         "2002": "L'intervalle de sondage doit être supérieur à zéro !",
         "2003": "Réglage du niveau de puissance invalide !",
         "2004": "The frequency must be set between {min} and {max} kHz and must be a multiple of 250kHz!",
+        "2005": "Invalid country selection !",
         "3001": "Rien n'a été supprimé !",
         "3002": "Configuration réinitialisée. Redémarrage maintenant...",
         "4001": "@:apiresponse.2001",
@@ -77,6 +85,7 @@
         "7014": "Le sujet Hass ne doit pas dépasser {max} caractères !",
         "7015": "Le sujet Hass ne doit pas contenir d'espace !",
         "7016": "LWT QOS ne doit pas être supérieur à {max}!",
+        "7017": "Client ID must not longer then {max} characters!",
         "8001": "L'adresse IP n'est pas valide !",
         "8002": "Le masque de réseau n'est pas valide !",
         "8003": "La passerelle n'est pas valide !",
@@ -112,7 +121,6 @@
         "UnreadMessages": "messages non lus",
         "Loading": "@:base.Loading",
         "EventLog": "Journal des événements",
-        "Close": "Fermer",
         "InverterInfo": "Informations sur l'onduleur",
         "LimitSettings": "Paramètres de la limite",
         "LastLimitSetStatus": "Statut de la dernière limite fixée",
@@ -132,7 +140,8 @@
         "Ok": "OK",
         "Unknown": "Inconnu",
         "ShowGridProfile": "Show Grid Profile",
-        "GridProfile": "Grid Profile"
+        "GridProfile": "Grid Profile",
+        "LoadingInverter": "Waiting for data... (can take up to 10 seconds)"
     },
     "eventlog": {
         "Start": "Départ",
@@ -181,10 +190,12 @@
         "FirmwareVersionHint": "Cliquez ici pour afficher des informations sur votre version actuelle",
         "FirmwareUpdate": "Mise à jour du firmware",
         "FirmwareUpdateHint": "Cliquez ici pour voir les changements entre votre version et la dernière version",
+        "FrmwareUpdateAllow": "En activant le contrôle de mise à jour, une demande est envoyée à GitHub.com à chaque fois que la page est consultée afin de récupérer la dernière version disponible. Si tu n'es pas d'accord, laisse cette fonction désactivée.",
         "ResetReason0": "Raison de la réinitialisation CPU 0",
         "ResetReason1": "Raison de la réinitialisation CPU 1",
         "ConfigSaveCount": "Nombre d'enregistrements de la configuration",
-        "Uptime": "Temps de fonctionnement"
+        "Uptime": "Durée de fonctionnement",
+        "UptimeValue": "0 jour {time} | 1 jour {time} | {count} jours {time}"
     },
     "hardwareinfo": {
         "HardwareInformation": "Informations sur le matériel",
@@ -192,7 +203,9 @@
         "ChipRevision": "Révision de la puce",
         "ChipCores": "Nombre de cœurs",
         "CpuFrequency": "Fréquence du CPU",
-        "Mhz": "MHz"
+        "Mhz": "MHz",
+        "CpuTemperature": "CPU Temperature",
+        "FlashSize": "Taille de la mémoire flash"
     },
     "memoryinfo": {
         "MemoryInformation": "Informations sur la mémoire",
@@ -202,8 +215,16 @@
         "Used": "Utilisée",
         "Size": "Taille",
         "Heap": "Heap",
+        "PsRam": "PSRAM",
         "LittleFs": "LittleFs",
         "Sketch": "Sketch"
+    },
+    "heapdetails": {
+        "HeapDetails": "Heap Details",
+        "TotalFree": "Total free",
+        "LargestFreeBlock": "Biggest contiguous free block",
+        "MaxUsage": "Maximum usage since start",
+        "Fragmentation": "Level of fragmentation"
     },
     "radioinfo": {
         "RadioInformation": "Informations sur la radio",
@@ -277,6 +298,7 @@
         "Disabled": "Désactivé",
         "Server": "@:ntpinfo.Server",
         "Port": "Port",
+        "ClientId": "Client ID",
         "Username": "Nom d'utilisateur",
         "BaseTopic": "Sujet de base",
         "PublishInterval": "Intervalle de publication",
@@ -305,10 +327,7 @@
     "inverterchannelinfo": {
         "String": "Ligne {num}",
         "Phase": "Phase {num}",
-        "General": "General",
-        "Property": "Propriété",
-        "Value": "Valeur",
-        "Unit": "Unité"
+        "General": "General"
     },
     "invertertotalinfo": {
         "TotalYieldTotal": "Rendement total",
@@ -349,9 +368,14 @@
         "CmtPaLevel": "CMT2300A Niveau de puissance d'émission",
         "NrfPaLevelHint": "Used for HM-Inverters. Assurez-vous que votre alimentation est suffisamment stable avant d'augmenter la puissance d'émission.",
         "CmtPaLevelHint": "Used for HMS/HMT-Inverters. Assurez-vous que votre alimentation est suffisamment stable avant d'augmenter la puissance d'émission.",
+        "CmtCountry": "CMT2300A Region/Country:",
+        "CmtCountryHint": "Each country has different frequency allocations.",
+        "country_0": "Europe ({min}MHz - {max}MHz)",
+        "country_1": "North America ({min}MHz - {max}MHz)",
+        "country_2": "Brazil ({min}MHz - {max}MHz)",
         "CmtFrequency": "CMT2300A Frequency:",
         "CmtFrequencyHint": "Make sure to only use frequencies that are allowed in the respective country! After a frequency change, it can take up to 15min until a connection is established.",
-        "CmtFrequencyWarning": "The selected frequency is outside the range allowed in the EU. Make sure that this selection does not violate any local regulations.",
+        "CmtFrequencyWarning": "The selected frequency is outside the allowed range in your selected region/country. Make sure that this selection does not violate any local regulations.",
         "MHz": "{mhz} MHz",
         "dBm": "{dbm} dBm",
         "Min": "Minimum ({db} dBm)",
@@ -419,6 +443,7 @@
         "Hostname": "Nom d'hôte",
         "HostnameHint": "Nom d'hôte ou adresse IP",
         "Port": "Port",
+        "ClientId": "Client ID:",
         "Username": "Nom d'utilisateur",
         "UsernameHint": "Nom d'utilisateur, laisser vide pour une connexion anonyme",
         "Password": "Mot de passe:",
@@ -493,6 +518,7 @@
         "ZeroRuntimeHint": "Zero runtime data (no yield data) if inverter becomes unreachable.",
         "ZeroDay": "Zero daily yield at midnight",
         "ZeroDayHint": "This only works if the inverter is unreachable. If data is read from the inverter, it's values will be used. (Reset only occours on power cycle)",
+        "ClearEventlog": "Clear Eventlog at midnight",
         "Cancel": "@:base.Cancel",
         "Save": "@:base.Save",
         "DeleteMsg": "Êtes-vous sûr de vouloir supprimer l'onduleur \"{name}\" avec le numéro de série \"{serial}\" ?",
@@ -535,12 +561,14 @@
         "Back": "Retour",
         "Retry": "Réessayer",
         "OtaStatus": "Statut OTA",
-        "OtaSuccess": "Succès de l'OTA. L'unité a été automatiquement redémarrée et sera à nouveau disponible dans quelques instants. N'oubliez pas de recharger l'interface web !",
+        "OtaSuccess": "Le téléchargement du firmware a réussi. L'appareil a été redémarré automatiquement. Lorsque l'appareil est à nouveau accessible, l'interface est automatiquement rechargée.",
         "FirmwareUpload": "Téléversement du firmware",
         "UploadProgress": "Progression du téléversement"
     },
     "about": {
         "AboutOpendtu": "À propos d'OpenDTU",
+        "Documentation": "Documentation",
+        "DocumentationBody": "The firmware and hardware documentation can be found here: <a href=\"https://www.opendtu.solar\" target=\"_blank\">https://www.opendtu.solar</a>",
         "ProjectOrigin": "Origine du projet",
         "ProjectOriginBody1": "Ce projet a été démarré suite à cette discussion <a href=\"https://www.mikrocontroller.net/topic/525778\" target=\"_blank\">(Mikrocontroller.net)</a>.",
         "ProjectOriginBody2": "Le protocole Hoymiles a été décrypté grâce aux efforts volontaires de nombreux participants. OpenDTU, entre autres, a été développé sur la base de ce travail. Le projet est sous licence Open Source (<a href=\"https://www.gnu.de/documents/gpl-2.0.de.html\" target=\"_blank\">GNU General Public License version 2</a>).",
@@ -568,10 +596,14 @@
         "DefaultProfile": "(Réglages par défaut)",
         "ProfileHint": "Votre appareil peut cesser de répondre si vous sélectionnez un profil incompatible. Dans ce cas, vous devez effectuer une suppression via l'interface série.",
         "Display": "Affichage",
-        "PowerSafe": "Activer l'économiseur d'énergie",
+        "PowerSafe": "Economiseur d'énergie",
         "PowerSafeHint": "Eteindre l'écran si aucun onduleur n'est en production.",
-        "Screensaver": "Activer l'écran de veille",
+        "Screensaver": "OLED Anti burn-in",
         "ScreensaverHint": "Déplacez un peu l'écran à chaque mise à jour pour éviter le phénomène de brûlure. (Utile surtout pour les écrans OLED)",
+        "DiagramMode": "Diagram mode:",
+        "off": "Off",
+        "small": "Small",
+        "fullscreen": "Fullscreen",
         "DiagramDuration": "Diagram duration:",
         "DiagramDurationHint": "The time period which is shown in the diagram.",
         "Seconds": "Seconds",
@@ -595,5 +627,12 @@
         "Name": "Nom",
         "ValueSelected": "Sélectionné",
         "ValueActive": "Activé"
+    },
+    "inputserial": {
+        "format_hoymiles": "Hoymiles serial number format",
+        "format_converted": "Already converted serial number",
+        "format_herf_valid": "E-Star HERF format (will be saved converted): {serial}",
+        "format_herf_invalid": "E-Star HERF format: Invalid checksum",
+        "format_unknown": "Unknown format"
     }
 }

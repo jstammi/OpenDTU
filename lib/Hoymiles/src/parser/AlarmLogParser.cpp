@@ -1,7 +1,27 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
- * Copyright (C) 2022-2023 Thomas Basler and others
+ * Copyright (C) 2022-2024 Thomas Basler and others
  */
+
+/*
+This parser is used to parse the response of 'AlarmDataCommand'.
+
+Data structure:
+* wcode:
+  * right 8 bit: Event ID
+  * bit 13: Start time = PM (12h has to be added to start time)
+  * bit 12: End time = PM (12h has to be added to start time)
+* Start: 12h based start time of the event (PM indicator in wcode)
+* End: 12h based start time of the event (PM indicator in wcode)
+
+00   01 02 03 04   05 06 07 08   09   10 11   12 13   14 15   16 17   18 19   20   21   22   23   24 25   26   27 28 29 30 31
+                                              00 01   02 03   04 05   06 07   08   09   10   11
+                                              |<-------------- First log entry -------------->|   |<->|
+-----------------------------------------------------------------------------------------------------------------------------
+95   80 14 82 66   80 14 33 28   01   00 01   80 01   00 01   91 EA   91 EA   00   00   00   00   00 8F   65   -- -- -- -- --
+^^   ^^^^^^^^^^^   ^^^^^^^^^^^   ^^   ^^^^^   ^^^^^           ^^^^^   ^^^^^   ^^   ^^   ^^   ^^   ^^^^^   ^^
+ID   Source Addr   Target Addr   Idx  ?       wcode   ?       Start   End     ?    ?    ?    ?    wcode   CRC8
+*/
 #include "AlarmLogParser.h"
 #include "../Hoymiles.h"
 #include <cstring>
@@ -55,11 +75,12 @@ const std::array<const AlarmMessage_t, ALARM_MSG_COUNT> AlarmLogParser::_alarmMe
     { AlarmMessageType_t::ALL, 144, "Grid: Grid overfrequency", "Netz: Netzüberfrequenz", "Réseau: Surfréquence du réseau" },
     { AlarmMessageType_t::ALL, 145, "Grid: Grid underfrequency", "Netz: Netzunterfrequenz", "Réseau: Sous-fréquence du réseau" },
     { AlarmMessageType_t::ALL, 146, "Grid: Rapid grid frequency change rate", "Netz: Schnelle Wechselrate der Netzfrequenz", "Réseau: Taux de fluctuation rapide de la fréquence du réseau" },
-    { AlarmMessageType_t::ALL, 147, "Grid: Power grid outage", "Netz: Eletrizitätsnetzausfall", "Réseau: Panne du réseau électrique" },
+    { AlarmMessageType_t::ALL, 147, "Grid: Power grid outage", "Netz: Elektrizitätsnetzausfall", "Réseau: Panne du réseau électrique" },
     { AlarmMessageType_t::ALL, 148, "Grid: Grid disconnection", "Netz: Netztrennung", "Réseau: Déconnexion du réseau" },
     { AlarmMessageType_t::ALL, 149, "Grid: Island detected", "Netz: Inselbetrieb festgestellt", "Réseau: Détection d’îlots" },
 
     { AlarmMessageType_t::ALL, 150, "DCI exceeded", "", "" },
+    { AlarmMessageType_t::ALL, 152, "Grid: Phase angle difference between two phases exceeded 5° >10 times", "", "" },
     { AlarmMessageType_t::HMT, 171, "Grid: Abnormal phase difference between phase to phase", "", "" },
     { AlarmMessageType_t::ALL, 181, "Abnormal insulation impedance", "", "" },
     { AlarmMessageType_t::ALL, 182, "Abnormal grounding", "", "" },
